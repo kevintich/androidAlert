@@ -45,6 +45,17 @@ function processArgs(args, defaults){
 }
 arg = processArgs(args,defaults);
 var client = dgram.createSocket("udp4");
+// I am unsure of how to do multicast, but I imagine its like this: 
+/*
+//arg.bcast is a class D ip Address (224.0.0.0 - 239.255.255.255)
+// the python docs for multicast
+//  http://wiki.python.org/moin/UdpCommunication#Multicasting.3F
+// doesn't use add membership for the receiving end
+//client.addMembership(arg.bcast);
+client.setMulticastTTL(32);
+...
+//client.dropMembership(arg.bcast);
+*/
 client.setBroadcast(true);
 var server = http.createServer(function(req, res){
 	var GET = URL.parse(req.url, true).query;
