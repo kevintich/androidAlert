@@ -3,12 +3,16 @@ var dgram = require("dgram");
 var http = require("http");
 var URL = require("url");
 args = process.argv.splice(2);
-var defaults = {'bcast': "192.168.1.255", "bport":'8081', "lport": '8080', "listen":"127.0.0.1"
+var defaults = {'bcast': "192.168.1.255", "bport":'8081', "lport": '8080', "listen":"127.0.0.1",
 				"help":function(){
 					console.log("ARGUMENTS");
 					console.log("\t--help:\tdisplay this help");
 					console.log("\t--bcast=ADDR:\tbroadcast address");
 					console.log("\t--bport=PORTNO:\tbroadcast port");
+					console.log("\t--lport=PORTNO:\tport to listen on");
+					console.log("\t--listen=ADDR:\tIP to listen on");
+					console.log("\t--help:\tdisplay this help");
+					process.exit();
 					}
 				};
 Array.prototype.clean = function(clean){
@@ -40,7 +44,6 @@ function processArgs(args, defaults){
 		return ret;
 }
 arg = processArgs(args,defaults);
-console.log(arg);
 var client = dgram.createSocket("udp4");
 client.setBroadcast(true);
 var server = http.createServer(function(req, res){
@@ -49,7 +52,7 @@ var server = http.createServer(function(req, res){
 	if(GET["send"]){
 		var string = JSON.stringify(GET);
 		var message = new Buffer(string+"\r\n");
-		client.send(message, 0, message.length, 8081, "192.168.1.255");
+		client.send(message, 0, message.length, parseInt(arg.bport,10), arg.bcast);
 	}
 	if(GET.jsonp)
 		res.write(GET.jsonp+'(');
@@ -61,10 +64,10 @@ var server = http.createServer(function(req, res){
 server.on("close", function(){
 	client.close();
 	});
-server.listen(8080, "127.0.0.1");
+server.listen(parseInt(arg.lport), arg.listen);
 process.on("SIGINT", function(){
 	console.log("Exiting... buh bye!");
 	server.close();
 	process.exit();
 });
-console.log("SYNTAX: http://127.0.0.1:8080/?id=ID&title=TITLE&text=TEXT&send=1");
+console.log("SYNTAX: http://"+arg.listen+":"+arg.lport+"/?id=ID&title=TITLE&text=TEXT&send=1");
