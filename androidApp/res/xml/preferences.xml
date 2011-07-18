@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+        <PreferenceCategory
+                android:title="General">
+                <CheckBoxPreference
+                        android:title="Vibrate"
+                        android:defaultValue="false"
+                        android:summary="Whether or not to vibrate when a message is received"
+                        android:key="vibrate" />
+                <CheckBoxPreference
+                        android:title="Ring"
+                        android:defaultValue="false"
+                        android:summary="Whether or not to ring when a message is received"
+                        android:key="ring" />
+                <EditTextPreference
+					  android:summary="what port to listen on"
+					  android:defaultValue="8081"
+					  android:title="Port"
+					  android:numeric="integer"
+					  android:key="port" />
+				<Preference
+						android:title="Restart service"
+						android:summary="restarts the service, and applies your changes"
+						android:key="restartservice" />
+				<Preference
+						android:title="Stop service"
+						android:summary="stops the service"
+						android:key="stopservice" />
+        </PreferenceCategory>
+</PreferenceScreen>
